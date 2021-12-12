@@ -75,37 +75,21 @@ public class homework3 {
                 int xmin = Math.min(Math.min(a, c), e);
 
                 for (int j = 10; j >= -11; j--) {// y ekseni
+                    String line = "";
                     for (int i = -10; i <= 11; i++) { // x ekseni
-// -5 3 0 6 5 3
-//                        if (xmin <= i && i <= xmax && ymin <= j && j <= ymax) {
-                        if (Math.round(k * i + l) == j)
-                            System.out.print("*");
-                        else if (Math.round(m * i + n) == j)
-                            System.out.print("*");
-                        else if (Math.round(t * i + p) == j)
-                            System.out.print("*");
-                        else if (j == 0) {
-                            if (i == 0)
-                                System.out.print("|");
-                            else if (a * i + b == j)
-                                System.out.print("*");
-                            else if (i == 11)
-                                System.out.print("x");
-                            else
-                                System.out.print("-");
-
-                        } else if (i == 0)
-                            if (j == 10)
-                                System.out.print("y");
-                            else
-                                System.out.print("|");
-//                        }
-                        else {
-                            System.out.print(" ");
-                        }
+                        boolean isRangeValid = (xmin <= i && i <= xmax) && (ymin <= j && j <= ymax);
+                        if (Math.round(k * i + l) == j && isRangeValid) {
+                            line += "*";
+                        } else if (Math.round(m * i + n) == j && isRangeValid) {
+                            line += "*";
+                        } else if (Math.round(t * i + p) == j && isRangeValid) {
+                            line += "*";
+                        } else line = printCoordinateSystem(a, b, ymax, ymin, xmax, xmin, j, line, i);
 
 
                     }
+                    line = modifyLine(line);
+                    System.out.print(line);
                     System.out.println();
                 }
 
@@ -120,35 +104,32 @@ public class homework3 {
                 int e = input.nextInt();
                 int f = input.nextInt();
                 input.nextLine();
-                int g = c + e - a;
-                int h = f + d - b;
-                for (int j = 10; j >= -11; j--) {// y ekseni
-                    for (int i = -10; i <= 11; i++) { // x ekseni
-                        if (j == 0) {
-                            if (i == 0)
-                                System.out.print("|");
+                if (b != d) {
+                    System.out.println("These points cannot construct a rectangle.");
+                } else {
+                    int ymax = b;
+                    int ymin = f;
+                    int xmax = c;
+                    int xmin = a;
+                    for (int j = 10; j >= -11; j--) {// y ekseni
+                        String line = "";
+                        for (int i = -10; i <= 11; i++) { // x ekseni
+                            boolean isRangeValid = (xmin <= i && i <= xmax) && (ymin <= j && j <= ymax);
+                            if ((j == ymax || j == ymin) && isRangeValid) {
+                                line += "*";
+                            } else if ((i == a || i == c) && isRangeValid) {
+                                line += "*";
+                            } else {
+                                line = printCoordinateSystem(a, b, ymax, ymin, xmax, xmin, j, line, i);
+                            }
 
-                            else if (i == 11)
-                                System.out.print("x");
-                            else
-                                System.out.print("-");
 
-                        } else if (i == 0) {
-                            if (j == 10)
-                                System.out.print("y");
-                            else
-                                System.out.print("|");
-                        } else if (j == b || j == f)
-                            i = a;
-                        while (i <= c) {
-                            System.out.print("*");
-                            i++;
                         }
-
-
+                        System.out.print(line);
+                        System.out.println();
                     }
-
                 }
+
 
             } else if (shapenumber == 4) {
                 System.out.println("Parabola formula is y = ax^2 + bx + c");
@@ -227,6 +208,61 @@ public class homework3 {
 
     }
 
+    public static String printCoordinateSystem(int a, int b, int ymax, int ymin, int xmax, int xmin, int j, String line, int i) {
+        if (j == 0) {
+            if (i == 0) {
+                line += "|";
+            } else if (a * i + b == j && (xmin <= i && i <= xmax) && (ymin <= j && j <= ymax)) {
+                line += "*";
+            } else if (i == 11) {
+                line += "x";
+            } else {
+                line += "-";
+            }
+
+        } else if (i == 0)
+            if (j == 10) {
+                line += "y";
+
+            } else {
+                line += "|";
+            }
+        else {
+            line += " ";
+        }
+        return line;
+    }
+
+    public static String modifyLine(String line) {
+
+        if (isLineValid(line)) {
+            return line;
+        } else {
+            int firstIndexOfStar = line.indexOf('*');
+            int lastIndexOfStar = line.lastIndexOf('*');
+            String newLine = "";
+            int length = line.length();
+            for (int i = 0; i < length; i++) {
+                if (line.charAt(i) == '*') {
+                    if ((i == firstIndexOfStar) || (i == lastIndexOfStar)) {
+                        newLine += "*";
+                    } else {
+                        newLine += " ";
+                    }
+                } else {
+                    newLine += line.charAt(i);
+                }
+            }
+            return newLine;
+        }
+    }
+
+    public static boolean isLineValid(String line) {
+        int lineLength = line.length();
+        int midIndex = (lineLength - 1) / 2;
+        return line.charAt(midIndex) != '|' || !line.contains("*");
+    }
+
     public static double calculateSlope(int x1, int y1, int x2, int y2) {
         // y - y1 = m(x-x1) -> y = mx - mx1 + y1
         double slope;
@@ -235,15 +271,14 @@ public class homework3 {
         } else {
             slope = (double) (y1 - y2) / (x1 - x2);
         }
-//        slope = (int) (slope * 100) / 100.0;
         return slope;
     }
 
     public static double calculateConstant(int x1, int y1, int x2, int y2) {
         // y - y1 = m(x-x1) -> y = mx - mx1 + y1
         double slope = calculateSlope(x1, y1, x2, y2);
-        double constant = -slope * x1 + y1;
-//        constant = (int) (constant * 100) / 100.0;
-        return constant;
+        return -slope * x1 + y1;
     }
+
+
 }
