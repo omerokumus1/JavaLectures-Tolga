@@ -19,7 +19,7 @@ public class HW3Test {
     }
 
     public static void modifyLineTest(String line){
-        line = homework3.modifyLine(line);
+        line = HW3_150120022.modifyLine(line);
         System.out.println(line);
     }
 }
