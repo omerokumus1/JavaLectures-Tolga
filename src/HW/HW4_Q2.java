@@ -2,6 +2,13 @@ package HW;
 
 import java.util.Scanner;
 
+/*
+42 123 4598
+DNumber:_2_2_4_9_
+LNumber:4414 38 598
+Number is Invalid
+ */
+
 public class HW4_Q2 {
     public static void main(String[] args) {
         /**     TODO:
@@ -15,10 +22,11 @@ public class HW4_Q2 {
          *          6. İlk arrayden başka, son, son-2, son-4.. şeklinde almadığın sayıları topla
          *          7. 2 ile çarpıp bulduğun sayıları topla
          *          8. 6. ile 7. basamaklarda bulduğun 2 sayıyı topla
+         *          9. Eğer toplam sayı 10'a tam bölünüyorsa ve bölüm bir çift sayıysa "number is valid", değilse "invalid"
          */
         Scanner input = new Scanner(System.in);
         String str = input.nextLine();
-        if (validateNumber(str)) {
+        if (validateNumber(str)) { // isNumberValid()
             int[] digits = initializeDigits(str);
             int[] dNumbers = getDNumbers(digits);
             int[] remainingNumbers = getRemainingNumbers(digits);
@@ -27,16 +35,27 @@ public class HW4_Q2 {
             int totalSum = getSumOf(doubledNumbers, remainingNumbers);
             printDNumbers(dNumbers, digits);
             printLNumbers(lNumbers);
-            if (isTotalSumEvenlyDivisible(totalSum)){
-                System.out.println("Number is Valid");
-            }
-            else{
-                System.out.println("Number is Invalid");
-
-            }
+            printNumberValidityResult(totalSum);
         } else {
             System.out.println("Invalid input");
         }
+    }
+
+    private static void printNumberValidityResult(int totalSum) {
+        if (isDivisibilityValid(totalSum)) {
+            System.out.println("Number is Valid");
+        } else {
+            System.out.println("Number is Invalid");
+
+        }
+    }
+
+    private static boolean isDivisibilityValid(int totalSum) {
+        return isDivisibleByTen(totalSum) && isTotalSumEvenlyDivisible(totalSum);
+    }
+
+    private static boolean isDivisibleByTen(int totalSum) {
+        return totalSum % 10 == 0;
     }
 
     private static void printLNumbers(String lNumbers) {
@@ -47,15 +66,15 @@ public class HW4_Q2 {
     private static String initializeLNumbers(int[] doubledNumbers, int[] remainingNumbers) {
         int size = doubledNumbers.length + remainingNumbers.length;
         String lNumbers = "";
-        if (size % 2 == 0){
-            for (int i = doubledNumbers.length-1; i >= 0; i--) {
+        if (size % 2 == 0) {
+            for (int i = doubledNumbers.length - 1; i >= 0; i--) {
                 lNumbers += doubledNumbers[i] + "" + remainingNumbers[i];
             }
-
-        } else{
-            lNumbers += remainingNumbers[remainingNumbers.length-1];
-            for (int i = doubledNumbers.length-1; i >= 0; i--) {
-                lNumbers += remainingNumbers[i] + "" + doubledNumbers[i];
+        } else {
+            // 4414 38 598
+            lNumbers += remainingNumbers[remainingNumbers.length - 1];
+            for (int i = doubledNumbers.length - 1; i >= 0; i--) {
+                lNumbers += doubledNumbers[i] + "" + remainingNumbers[i];
             }
 
         }
@@ -63,7 +82,7 @@ public class HW4_Q2 {
     }
 
     private static boolean isTotalSumEvenlyDivisible(int totalSum) {
-        double quotient = totalSum % 10;
+        int quotient = totalSum / 10;
         return quotient % 2 == 0;
 
     }
@@ -94,13 +113,12 @@ public class HW4_Q2 {
     private static void printDNumbers(int[] dNumbers, int[] digits) {
         System.out.print("DNumber:");
         if (digits.length % 2 == 0) {
-            for (int i = dNumbers.length-1; i >= 0; i--) {
+            for (int i = dNumbers.length - 1; i >= 0; i--) {
                 System.out.print(dNumbers[i] + "_");
             }
-        }
-        else{
+        } else {
             System.out.print("_");
-            for (int i = dNumbers.length-1; i >= 0; i--) {
+            for (int i = dNumbers.length - 1; i >= 0; i--) {
                 System.out.print(dNumbers[i] + "_");
             }
         }
@@ -185,7 +203,7 @@ public class HW4_Q2 {
         char ch;
         for (int i = 0; i < str.length(); i++) {
             ch = str.charAt(i);
-            if (!(Character.isDigit(ch)  || Character.isSpaceChar(ch)))
+            if (!(Character.isDigit(ch) || Character.isSpaceChar(ch)))
                 return true;
         }
 
