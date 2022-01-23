@@ -110,11 +110,11 @@ public class Session_1 {
 
         }
 
-        String encryptedStr = "";
+        StringBuilder encryptedStr = new StringBuilder();
         for (int k = 0; k < row; k++) {
             for (int l = 0; l < column; l++) {
                 if (encryptionTable[k][l] != '.')
-                    encryptedStr += encryptionTable[k][l];
+                    encryptedStr.append(encryptionTable[k][l]);
             }
         }
 
@@ -125,7 +125,7 @@ public class Session_1 {
             System.out.println();
         }
 
-        return encryptedStr;
+        return encryptedStr.toString();
 
     }
 
