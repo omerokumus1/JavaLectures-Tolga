@@ -20,7 +20,7 @@ public class RegularEmployee extends Employee{
 //    }
 
     public RegularEmployee(Employee employee, double perfScore) throws Exception {
-        super(employee, employee.getSalary(), employee.getDepartment());
+        super(employee, employee.getSalary(), employee.getHireDate(), employee.getDepartment());
         this.performanceScore=perfScore;
 
     }

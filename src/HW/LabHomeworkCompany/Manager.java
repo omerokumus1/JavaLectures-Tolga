@@ -14,8 +14,8 @@ public class Manager extends Employee {
         this.bonusBudget = bonusBudget;
     }
 
-    public Manager(Employee employee, double salary, Department department, double bonusBudget) throws Exception {
-        super(employee, salary, department);
+    public Manager(Employee employee, double bonusBudget) throws Exception {
+        super(employee, employee.getSalary(), employee.getHireDate(), employee.getDepartment());
         this.bonusBudget = bonusBudget;
     }
 

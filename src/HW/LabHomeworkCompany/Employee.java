@@ -24,10 +24,10 @@ public class Employee extends Person {
         numberOfEmployees++;
     }
 
-    public Employee(Person person, double salary, Department department) throws Exception {
+    public Employee(Person person, double salary, Calendar hireDate, Department department) throws Exception {
         this(person.getId(), person.getFirstName(), person.getLastName(),
                 person.getGender(), person.getBirthDate(), person.getMaritalStatus(),
-                person.isHasDriverLicence(), salary, Calendar.getInstance(), department);
+                person.isHasDriverLicence(), salary, hireDate, department);
     }
 
     //raiseSalary(percent: double): double raiseSalary(amount: int): double
