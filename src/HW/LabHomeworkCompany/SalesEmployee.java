@@ -48,9 +48,7 @@ public class SalesEmployee extends RegularEmployee {
 
     @Override
     public String toString() {
-        return "SalesEmployee{" +
-                "numberOfEmployees=" + numberOfEmployees +
-                ", Sales=" + sales +
-                '}';
+        return super.toString() + "\n\t\t\t\t" +
+                sales;
     }
 }

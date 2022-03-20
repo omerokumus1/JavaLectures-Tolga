@@ -50,9 +50,7 @@ public class Developer extends RegularEmployee {
 
     @Override
     public String toString() {
-        return "Developer{" +
-                "projects=" + projects +
-                ", numberOfEmployees=" + numberOfEmployees +
-                '}';
+        return super.toString() + "\n\t\t\t\t" +
+                projects ;
     }
 }

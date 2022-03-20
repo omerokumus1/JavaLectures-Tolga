@@ -43,10 +43,11 @@ public class RegularEmployee extends Employee{
 
     @Override
     public String toString() {
-        return "RegularEmployee{" +
-                "numberOfEmployees=" + numberOfEmployees +
-                ", performanceScore=" + performanceScore +
+        return super.toString() + "\n\t\t\t\tRegularEmployee Info [" +
+                "performanceScore=" + performanceScore +
                 ", bonus=" + bonus +
-                '}';
+                ']';
     }
+
+    // TODO: bonus gelmiyor, hepsi 0
 }

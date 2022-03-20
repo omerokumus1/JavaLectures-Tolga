@@ -39,13 +39,16 @@ public class Product {
         this.price = price;
     }
 
+    public String getDateFormatted(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+    }
     @Override
     public String toString() {
-        return "Product{" +
-                "productName='" + productName + '\'' +
-                ", Transaction Date=" + saleDate +
+        return "Product [" +
+                "productName=" + productName +
+                ", transactionDate=" + getDateFormatted(saleDate) +
                 ", price=" + price +
-                '}';
+                ']';
     }
 }
 

@@ -53,9 +53,9 @@ public class Person {
 
     public void setGender(String gender) throws Exception {
         if (gender.equals("Man")) {
-            this.gender = 2;
-        } else if (gender.equals("Woman")) {
             this.gender = 1;
+        } else if (gender.equals("Woman")) {
+            this.gender = 2;
         } else throw new Exception("Invalid input");
     }
 
@@ -70,7 +70,7 @@ public class Person {
     public String getMaritalStatus() {
         if (maritalStatus == 1) {
             return "Single";
-        } else return "Woman";
+        } else return "Married";
     }
 
     public void setMaritalStatus(String maritalStatus) throws Exception {
@@ -105,15 +105,22 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "\t\t\t\tPerson Info [" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", gender=" + gender +
-                ", birthDate=" + birthDate +
-                ", maritalStatus=" + maritalStatus +
-                ", hasDriverLicence=" + hasDriverLicence +
-                '}';
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                ", gender=" + getGender() +
+                "]";
+    }
+
+    public void printInfo() {
+        System.out.println("Person [" + id + ", firstName=" + firstName + ", lastName=" + lastName
+                + ", gender=" + getGender() + ", birthDate=" + getDateFormatted(birthDate)
+                + ", maritalStatus=" + getMaritalStatus() + ", hasDriverLicence=" + isHasDriverLicence() + "]");
+    }
+
+    public String getDateFormatted(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
     }
 }
 

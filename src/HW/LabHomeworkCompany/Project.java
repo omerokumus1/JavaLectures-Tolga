@@ -51,13 +51,17 @@ public class Project {
         }
     }
 
+    public String getDateFormatted(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+    }
+
     @Override
     public String toString() {
-        return "Project{" +
-                "projectName='" + projectName + '\'' +
-                ", startDate=" + startDate +
+        return "Project[" +
+                "projectName=" + projectName +
+                ", startDate=" + getDateFormatted(startDate) +
                 ", state=" + state +
-                '}';
+                ']';
     }
 
 

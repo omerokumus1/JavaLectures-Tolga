@@ -1,15 +1,14 @@
 package HW.LabHomeworkCompany;
 
-import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
 public class ObjectMaker {
-    private ArrayList<Product> products;
-    private ArrayList<Project> projects;
-    private ArrayList<Person> people;
-    private ArrayList<Department> departments;
+    private final ArrayList<Product> products;
+    private final ArrayList<Project> projects;
+    private final ArrayList<Person> people;
+    private final ArrayList<Department> departments;
 
     public ObjectMaker() {
         products = new ArrayList<>();
@@ -139,7 +138,7 @@ public class ObjectMaker {
     }
 
     private Person findPersonById(int id) {
-        for (Person p:
+        for (Person p :
                 people) {
             if (p.getId() == id)
                 return p;
@@ -157,13 +156,11 @@ public class ObjectMaker {
     }
 
     private Person getCustomer(String[] lineSplit) throws Exception {
-        // TODO: Person'ı ara yoksa oluştur varsa onu kullan: findPerson()
-        //      - ArrayList için önce department araması yap (id ile) bulduğun department'ı gönder (getSalesEmployee'deki gibi)
         String[] productNames = Arrays.copyOfRange(lineSplit, 2, lineSplit.length);
         ArrayList<Product> products = getCorrespondingProducts(productNames);
         int id = Integer.parseInt(lineSplit[1]);
         Person person = findPersonById(id);
-        return new Customer(person, new ArrayList<>());
+        return new Customer(person, products);
     }
 
     private Person getPerson(String[] lineSplit) throws Exception {
@@ -234,7 +231,8 @@ public class ObjectMaker {
     }
 
     private void addPerson(Person person) {
-        people.remove(person);
+        Person personToRemove = findPersonById(person.getId());
+        people.remove(personToRemove);
         people.add(person);
     }
 
@@ -250,10 +248,204 @@ public class ObjectMaker {
         departments.add(department);
     }
 
-    @Override
-    public String toString() {
-        return "ObjectMaker{" +
-                "people=" + people +
-                '}';
+    private Manager findManagerByDepartment(Department department) {
+        for (Person p :
+                people) {
+            if (p instanceof Manager) {
+                if (((Manager) p).getDepartment() == department)
+                    return (Manager) p;
+            }
+        }
+        return null;
+    }
+
+    public void printObjects() {
+        printDepartments();
+        printCustomers();
+        printPeople();
+    }
+
+    private void printPeople() {
+        ArrayList<Person> people = findRestOfPeople();
+        System.out.println("\n\n**********************PEOPLE************************");
+        for (Person p :
+                people) {
+            p.printInfo();
+        }
+    }
+
+    private void printCustomers() {
+        ArrayList<Customer> customers = findCustomers();
+        System.out.println("\n\n**********************CUSTOMERS************************");
+        for (Customer c :
+                customers) {
+            System.out.println(c);
+        }
+    }
+
+    private void printDepartments() {
+        for (Department department : departments) {
+            System.out.println("************************************************");
+            System.out.println(department);
+            Manager manager = findManagerByDepartment(department);
+            System.out.println(manager);
+            ArrayList<RegularEmployee> employees = findRegEmpsByDepartment(department);
+            System.out.println("\t\t # of Employees: " + employees.size() + "]");
+            printEmployees(employees);
+            System.out.println();
+        }
+    }
+
+    private void printEmployees(ArrayList<RegularEmployee> employees) {
+        int size = employees.size();
+        for (int i = 0; i < size; i++) {
+            System.out.println("\t\t\t" + (i + 1) + ". " +
+                    employees.get(i).getClass().getSimpleName() + "\n" + employees.get(i));
+        }
+    }
+
+    private ArrayList<RegularEmployee> findRegEmpsByDepartment(Department department) {
+        ArrayList<RegularEmployee> employees = new ArrayList<>();
+        for (Person person :
+                people) {
+            if (person instanceof RegularEmployee && ((RegularEmployee) person).getDepartment() == department)
+                employees.add((RegularEmployee) person);
+        }
+        return employees;
+    }
+
+    private ArrayList<Person> findRestOfPeople() {
+        ArrayList<Person> people = new ArrayList<>();
+        for (Person p :
+                this.people) {
+            if (!(p instanceof Customer || p instanceof Employee))
+                people.add(p);
+        }
+        return people;
+    }
+
+    private ArrayList<Customer> findCustomers() {
+        ArrayList<Customer> customers = new ArrayList<>();
+        for (Person p :
+                this.people) {
+            if (p instanceof Customer)
+                customers.add((Customer) p);
+        }
+        return customers;
+    }
+
+    public void distributeBudgets() {
+        ArrayList<Manager> managers = findManagers();
+        for (Manager m :
+                managers) {
+            m.distributeBonusBudget();
+        }
+    }
+
+    private ArrayList<Manager> findManagers() {
+        ArrayList<Manager> managers = new ArrayList<>();
+        for (Person p :
+                people) {
+            if (p instanceof Manager)
+                managers.add((Manager) p);
+        }
+        return managers;
+    }
+
+    public void raiseSalaries() throws Exception {
+        raiseManagerSalaries();
+        raiseRegularEmployeeSalaries();
+        raiseDeveloperSalaries();
+        raiseSalesEmployeeSalaries();
+        fixSalaryOfMaxEarnedSalesEmp();
+
+    }
+
+    private void fixSalaryOfMaxEarnedSalesEmp() {
+        ArrayList<SalesEmployee> salesEmployees = findSalesEmployees();
+        SalesEmployee maxEarnedSalesEmp = findMaxEarnedSalesEmp(salesEmployees);
+        maxEarnedSalesEmp.raiseSalary(1000);
+    }
+
+    private SalesEmployee findMaxEarnedSalesEmp(ArrayList<SalesEmployee> salesEmployees) {
+        SalesEmployee maxEarnedSalesEmp = salesEmployees.get(0);
+        for (SalesEmployee se :
+                salesEmployees) {
+            if (getTotalValue(se.getSales()) > getTotalValue(maxEarnedSalesEmp.getSales()))
+                maxEarnedSalesEmp = se;
+        }
+        return maxEarnedSalesEmp;
+    }
+
+    private double getTotalValue(ArrayList<Product> products){
+        double sum = 0;
+        for (Product p :
+                products) {
+            sum += p.getPrice();
+        }
+        return sum;
+    }
+
+
+    private void raiseManagerSalaries() throws Exception {
+        ArrayList<Manager> managers = findManagers();
+        for (Manager m :
+                managers) {
+            m.raiseSalary(0.2);
+        }
+    }
+
+    private void raiseRegularEmployeeSalaries() throws Exception {
+        ArrayList<RegularEmployee> regularEmployees = findRegularEmployees();
+        for (RegularEmployee re :
+                regularEmployees) {
+            re.raiseSalary(0.3);
+        }
+    }
+
+    private void raiseDeveloperSalaries() throws Exception {
+        ArrayList<Developer> developers = findDevelopers();
+        for (Developer d :
+                developers) {
+            d.raiseSalary(0.23);
+        }
+    }
+
+    private void raiseSalesEmployeeSalaries() throws Exception {
+        ArrayList<SalesEmployee> salesEmployees = findSalesEmployees();
+        for (SalesEmployee se :
+                salesEmployees) {
+            se.raiseSalary(0.18);
+        }
+    }
+
+    private ArrayList<SalesEmployee> findSalesEmployees() {
+        ArrayList<SalesEmployee> salesEmployees = new ArrayList<>();
+        for (Person p :
+                people) {
+            if (p instanceof SalesEmployee)
+                salesEmployees.add((SalesEmployee) p);
+        }
+        return salesEmployees;
+    }
+
+    private ArrayList<Developer> findDevelopers() {
+        ArrayList<Developer> developers = new ArrayList<>();
+        for (Person p :
+                people) {
+            if (p instanceof Developer)
+                developers.add((Developer) p);
+        }
+        return developers;
+    }
+
+    private ArrayList<RegularEmployee> findRegularEmployees() {
+        ArrayList<RegularEmployee> regularEmployees = new ArrayList<>();
+        for (Person p :
+                people) {
+            if (p instanceof RegularEmployee && !(p instanceof SalesEmployee || p instanceof Developer) )
+                regularEmployees.add((RegularEmployee) p);
+        }
+        return regularEmployees;
     }
 }

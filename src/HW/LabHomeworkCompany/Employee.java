@@ -9,10 +9,8 @@ public class Employee extends Person {
     private double salary;
     private Calendar hireDate;
     private Department department;
-    // TODO: may be static
     public static int numberOfEmployees;
 
-    // TODO: diğer sınıflardaki constructor methodlarını da buradaki gibi düzenle
     public Employee(int id, String firstName, String lastName, String gender,
                     Calendar birthDate, String maritalStatus, String hasDriverLicence,
                     double salary, Calendar hireDate, Department department) throws Exception {
@@ -33,17 +31,19 @@ public class Employee extends Person {
     //raiseSalary(percent: double): double raiseSalary(amount: int): double
     public double raiseSalary(double percent) throws Exception {
         if (percent >= 0 && percent <= 1) {
-            return salary + profit(percent);
+            salary += profit(percent);
+            return salary;
         } else
             throw new Exception("Invalid percent!!");
     }
 
     public double raiseSalary(int amount) {
-        return salary + amount;
+        salary += amount;
+        return salary;
     }
 
     private double profit(double percent) {
-        return salary * percent * 100;
+        return salary * percent;
     }
 
     public double getSalary() {
@@ -80,11 +80,11 @@ public class Employee extends Person {
 
     @Override
     public String toString() {
-        return "Employee{" +
+        return  super.toString() + "\n\t\t\t\tEmployee Info [" +
                 "salary=" + salary +
-                ", hireDate=" + hireDate +
-                ", department=" + department +
-                ", numberOfEmployees=" + numberOfEmployees +
-                '}';
+                ", hireDate=" + getDateFormatted(hireDate) +
+                ']';
     }
+
+
 }

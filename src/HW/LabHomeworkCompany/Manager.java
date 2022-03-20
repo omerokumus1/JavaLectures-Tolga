@@ -6,7 +6,7 @@ import java.util.Calendar;
 public class Manager extends Employee {
     //regularEmployees: ArrayList<RegularEmployee> bonusBudget: double
 
-    private ArrayList<RegularEmployee> regularEmployees = new ArrayList<RegularEmployee>();
+    private ArrayList<RegularEmployee> regularEmployees = new ArrayList<>();
     private double bonusBudget;
 
     public Manager(int id, String firstName, String lastName, String gender, Calendar birthDate, String maritalStatus, String hasDriverLicence, double salary, Calendar hireDate, Department department, double bonusBudget) throws Exception {
@@ -28,23 +28,27 @@ public class Manager extends Employee {
     }
 
     public void distributeBonusBudget() {
-//        for (RegularEmployee re :
-//                regularEmployees) {
-//            double bonus = calculateBonus(re);
-//            re.setBonus(bonus);
-//        }
-
-
-        double sum = calculateSumofSalarysperformanceScore();
-//        unit = bonusBudget / sum;
-//        bonus = unit * salary* perfSc;
-
-        findthebonusvalue(sum);
+        double unit = calculateUnit();
+        double bonus;
+        for (RegularEmployee re :
+                regularEmployees) {
+            bonus = unit * re.getSalary() * re.getPerformanceScore();
+            re.setBonus(bonus);
+        }
 
     }
 
-    private void findthebonusvalue(double sum) {
+    private double calculateUnit() {
+        double sum = 0;
+        for (RegularEmployee re :
+                regularEmployees) {
+            sum += re.getSalary() * re.getPerformanceScore();
+        }
+        return bonusBudget / sum;
+    }
 
+
+    private void findthebonusvalue(double sum) {
         for (RegularEmployee regularEmployee : regularEmployees) {
             double unit;
             double bonus;
@@ -89,7 +93,8 @@ public class Manager extends Employee {
 
     @Override
     public String toString() {
-        return "Manager [id: " + super.getId() + ", " + super.getFirstName() + " " + super.getLastName() + "" + "\t\t # of Employees: " + numberOfEmployees+"]";
+        return "\tManager [id: " + super.getId() + ", " +
+                super.getFirstName() + " " + super.getLastName() ;
     }
 }
 
