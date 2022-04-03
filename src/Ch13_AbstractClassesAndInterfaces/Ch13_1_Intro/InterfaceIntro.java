@@ -78,6 +78,10 @@ class Screen { // B
         clickHandler.onClick(buttonId); // B A'yı burada uyarmış olur
     }
 
+    void mouseOverButton(int buttonId){
+        clickHandler.onMouseOver(buttonId);
+    }
+
     public Button getButton1() {
         return button1;
     }
@@ -105,9 +109,17 @@ class ScreenController { // A
             public void onClick(int buttonId) {
                 printInfo(buttonId);
             }
+
+            @Override
+            public void onMouseOver(int buttonId) {
+                printOnMouseOver(buttonId);
+            }
         });
     }
 
+    private void printOnMouseOver(int id){
+        System.out.println("ID'si " + id + " olan butonun üzerindesin");
+    }
     public Screen getScreen() {
         return screen;
     }
@@ -118,6 +130,8 @@ class ScreenController { // A
 
     interface ButtonClickHandler {
         void onClick(int buttonId);
+        void onMouseOver(int buttonId);
+
     }
 }
 
